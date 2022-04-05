@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style type="text/css">
+        #diana {
+            position: absolute;
+            max-width: 300px;
+            min-width: 50px;
+            max-height: 300px;
+            min-height: 50px;
+        }
+        
+        body {
+            padding: 10%;
+            /*border: solid 1px grey;*/
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Test your Reations!
+        <div id="level"> level 1</div>
+    </h1>
+    <p>click on the boxes and cicles quickly as you can!</p>
+    <p><strong>Your time: <div id = "ShowT"></div></strong></p>
+    <p id="diana"></p>
+
+    <script type="text/javascript">
+        var radM = [0, 50]
+        var visibilityM = ["hidden", "visible"]
+        var ancho, posX, posY, rad;
+        var puntos = 0;
+        var level = 1;
+        var intervalo = 3000; //Velocidad refresco diana
+
+        //dimensionamos el campo de juego
+        document.body.style.width = window.innerWidth;
+        document.body.style.height = window.innerHeight;
+        var y = window.innerWidth / 3;
+
+        //Codigo del color
+        function randomHex(x) {
+            var stringHex = ""
+            for (var i = 0; i < x; i++) {
+                let randomNumber = (Math.floor(16 * Math.random())).toString(16);
+                var stringHex = stringHex + randomNumber;
+            }
+            return stringHex;
+        }
+
+        //Forma y ubicacion 
+        function createPropiedades() {
+            ancho = Math.floor(y * Math.random())
+            posX = Math.floor(90 * Math.random())
+            posY = Math.floor(90 * Math.random())
+            rad = radM[Math.floor(2 * Math.random())]
+        }
+
+        function setPropiedades(nombreObjeto) {
+            createPropiedades()
+            document.getElementById(nombreObjeto).style.backgroundColor = "#" + randomHex(6);
+            document.getElementById(nombreObjeto).style.left = posX + "%";
+            document.getElementById(nombreObjeto).style.top = posY + "%";
+            document.getElementById(nombreObjeto).style.borderRadius = rad + "%";
+            document.getElementById(nombreObjeto).style.width = ancho + "px";
+            document.getElementById(nombreObjeto).style.height = ancho + "px";
+            document.getElementById(nombreObjeto).style.visibility = visibilityM[1];
+
+        }
+
+        var temporizadorCsg = 0;
+        setPropiedades("diana");
+
+        setInterval(() => {
+            temporizadorCsg++;
+            document.getElementById("ShowT").innerHTML = "TIEMPO: " + temporizadorCsg + " csg"
+            if (temporizadorCsg > 500) {
+                document.getElementById("ShowT").style.color = "red";
+            }
+            if (temporizadorCsg > 1000) {
+                document.body.innerHTML = "GAME OVER"
+            }
+        }, 10);
+
+        var a = setInterval(() => {
+            setPropiedades("diana");
+        }, intervalo);
+
+
+        document.getElementById("diana").onclick = function() {
+            document.getElementById("ShowT").style.color = "black";
+            setPropiedades("diana");
+            temporizadorCsg = 0;
+            puntos++;
+            if (puntos > 4) {
+                level++;
+                puntos = 0;
+                intervalo = 3000 - 300 * level;
+                if (intervalo < 500) {
+                    intervalo = 300;
+                }
+                a = clearInterval();
+                a = document.getElementById("level").innerHTML = "Level " + level + " -intevalo: " + intervalo;
+                setInterval(() => {
+                    setPropiedades("diana");
+                }, intervalo);
+            }
+        }
+    </script>
+</body>
+
+</html>
